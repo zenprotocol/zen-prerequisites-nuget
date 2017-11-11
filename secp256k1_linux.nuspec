@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/01/nuspec.xsd">
+    <metadata>
+	<id>zen_secp256k1_linux</id>
+	<version>0.1.0.18</version>
+	<title>secp256k1_linux</title>
+	<licenseUrl>https://raw.githubusercontent.com/bitcoin-core/secp256k1/master/COPYING</licenseUrl>
+	<projectUrl>https://github.com/bitcoin-core/secp256k1</projectUrl>
+	<description>Optimized C library for EC operations on curve secp256k1</description>
+	<summary>Secp256k1 library packaged for using on linux with mono. This library is experimental, so use at your own risk.</summary>
+	<tags>native, secp256k1, elliptic, curve, ecdsa, C++, linux</tags>
+        <copyright>(c) 2013 Pieter Wuille (attribution required)</copyright>
+        <authors>Pieter Wuille and secp256k1 contributors</authors>
+	<dependencies>
+            <dependency id="Baseclass.Contrib.Nuget.Output" version="2.4.0" />
+	</dependencies>
+    </metadata>
+    <files>	
+   	<file src="../secp256k1/.libs/libsecp256k1.so" target="output/libsecp256k1.so" /> 
+    </files>
+</package>
