@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-  <ItemGroup Condition="$(OS) == 'OSX' and $([MSBuild]::IsOsPlatform('OSX'))">
+  <ItemGroup Condition="$(OS) == 'Unix' and $([MSBuild]::IsOsPlatform('OSX'))">
       <ZenZ3OSXOutputFiles Include="$(SolutionDir)\..\packages\zen_z3_osx\output\z3" />
   </ItemGroup>
 
@@ -12,15 +12,15 @@
   Is run once after build, checks if the project's nuget package's .nuspec depends on Baseclass.Contrib.Nuget.Output and copies everything which is in the
   output folder to the builds OutDir.
   -->
-  <Target Name="ZenZ3OSXCopyToOutput" AfterTargets="Compile" DependsOnTargets="CollectZenZ3OSXOutputFiles">
+  <Target Name="ZenZ3OSXCopyToOutput" AfterTargets="Compile">
     <Copy SourceFiles="@(ZenZ3OSXOutputFiles)" DestinationFiles="@(ZenZ3OSXOutputFiles->'$(OutDir)\%(RecursiveDir)%(Filename)%(Extension)')" />
-    <Exec Command="chmod +x @(ZenZ3OSXOutputFiles->'$(OutDir)\%(RecursiveDir)%(Filename)%(Extension)')" Condition="$(OS) == 'OSX' and $([MSBuild]::IsOsPlatform('OSX'))" />
+    <Exec Command="chmod +x @(ZenZ3OSXOutputFiles->'$(OutDir)\%(RecursiveDir)%(Filename)%(Extension)')" Condition="$(OS) == 'Unix' and $([MSBuild]::IsOsPlatform('OSX'))" />
   </Target>
 
   <!-- 
   Is run once after clean, delete all files that match files collected by the CollectZenZ3OSXOutputFiles task.
   -->
-  <Target Name="ZenZ3OSXCleanOutput" AfterTargets="Clean" DependsOnTargets="CollectZenZ3OSXOutputFiles">
+  <Target Name="ZenZ3OSXCleanOutput" AfterTargets="Clean">
     <Delete Files="@(ZenZ3OSXOutputFiles->'$(OutDir)\%(RecursiveDir)%(Filename)%(Extension)')" />
   </Target>
 
