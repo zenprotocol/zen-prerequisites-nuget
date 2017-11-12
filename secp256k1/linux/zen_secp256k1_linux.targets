@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <ItemGroup Condition="$(OS) == 'Unix'">
+      <ZenSecp256k1LinuxOutputFiles Include="$(SolutionDir)\..\packages\zen_secp256k1_linux\output\libsecp256k1.so" />
+  </ItemGroup>	
+
+  <!-- ============================================================ -->
+  <!-- Build targets                                                -->
+  <!-- ============================================================ -->
+  <!-- 
+  Is run once after build, checks if the project's nuget package's .nuspec depends on Baseclass.Contrib.Nuget.Output and copies everything which is in the
+  output folder to the builds OutDir.
+  -->
+  <Target Name="ZenSecp256k1LinuxCopyToOutput" AfterTargets="Compile">
+    <Copy SourceFiles="@(ZenSecp256k1LinuxOutputFiles)" DestinationFiles="@(ZenSecp256k1LinuxOutputFiles->'$(OutDir)\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Exec Command="chmod +x @(ZenSecp256k1LinuxOutputFiles->'$(OutDir)\%(RecursiveDir)%(Filename)%(Extension)')" Condition="$(OS) == 'Unix'" />
+  </Target>
+
+  <!-- 
+  Is run once after clean, delete all files that match files collected by the CollectZenSecp256k1LinuxOutputFiles task.
+  -->
+  <Target Name="ZenSecp256k1LinuxCleanOutput" AfterTargets="Clean">
+    <Delete Files="@(ZenSecp256k1LinuxOutputFiles->'$(OutDir)\%(RecursiveDir)%(Filename)%(Extension)')" />
+  </Target>
+
+  <!--
+  Is run once per file which has been deleted by the CleanOutput target, if the containing folder is empty it gets deleted.
+  -->
+  <Target Name="CleanEmptyFolder" Inputs="@(ZenSecp256k1LinuxOutputFiles)" Outputs="%(Identity).Dummy" AfterTargets="CleanOutput">
+    <ItemGroup>
+      <EmptyCheck Include="$(OutDir)%(ZenSecp256k1LinuxOutputFiles.RecursiveDir)**\*.*" />
+    </ItemGroup>
+
+    <RemoveDir Condition="'@(EmptyCheck)' == '' And '%(ZenSecp256k1LinuxOutputFiles.RecursiveDir)' != ''" Directories="$(OutDir)%(ZenSecp256k1LinuxOutputFiles.RecursiveDir)" />
+  </Target>
+</Project>

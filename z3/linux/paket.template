@@ -1,10 +1,10 @@
 type file
 id zen_z3_linux
 licenseUrl https://github.com/Z3Prover/z3/blob/master/LICENSE.txt
-version 4.5.1.2-v1f29cebd4df6
+version 4.5.1.4-v1f29cebd4df6
 authors Microsoft
 description 
   Z3 Prover for linux
 files
-  z3.targets ==> build/
+  zen_z3_linux.targets ==> build/net40
   ../z3/build/z3* ==> output/ 
