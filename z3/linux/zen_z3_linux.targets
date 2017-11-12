@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-  <ItemGroup Condition="$(OS) == 'Unix'">
+  <ItemGroup Condition="$(OS) == 'Unix' and $([MSBuild]::IsOsPlatform('Linux'))">
       <ZenZ3LinuxOutputFiles Include="$(SolutionDir)\..\packages\zen_z3_linux\output\z3" />
   </ItemGroup>
 
@@ -14,7 +14,7 @@
   -->
   <Target Name="ZenZ3LinuxCopyToOutput" AfterTargets="Compile" DependsOnTargets="CollectZenZ3LinuxOutputFiles">
     <Copy SourceFiles="@(ZenZ3LinuxOutputFiles)" DestinationFiles="@(ZenZ3LinuxOutputFiles->'$(OutDir)\%(RecursiveDir)%(Filename)%(Extension)')" />
-    <Exec Command="chmod +x @(ZenZ3LinuxOutputFiles->'$(OutDir)\%(RecursiveDir)%(Filename)%(Extension)')" Condition="$(OS) == 'Unix'" />
+    <Exec Command="chmod +x @(ZenZ3LinuxOutputFiles->'$(OutDir)\%(RecursiveDir)%(Filename)%(Extension)')" Condition="$(OS) == 'Unix' and $([MSBuild]::IsOsPlatform('Linux'))" />
   </Target>
 
   <!-- 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-  <ItemGroup Condition="$(OS) == 'OSX'">
+  <ItemGroup Condition="$(OS) == 'Unix' and $([MSBuild]::IsOsPlatform('OSX'))">
       <ZenSecp256k1OSXOutputFiles Include="$(SolutionDir)\..\packages\zen_secp256k1_osx\output\libsecp256k1.dylib" />
   </ItemGroup>	
 
