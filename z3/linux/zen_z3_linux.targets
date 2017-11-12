@@ -12,7 +12,7 @@
   Is run once after build, checks if the project's nuget package's .nuspec depends on Baseclass.Contrib.Nuget.Output and copies everything which is in the
   output folder to the builds OutDir.
   -->
-  <Target Name="ZenZ3LinuxCopyToOutput" AfterTargets="Compile" DependsOnTargets="CollectZenZ3LinuxOutputFiles">
+  <Target Name="ZenZ3LinuxCopyToOutput" AfterTargets="Compile">
     <Copy SourceFiles="@(ZenZ3LinuxOutputFiles)" DestinationFiles="@(ZenZ3LinuxOutputFiles->'$(OutDir)\%(RecursiveDir)%(Filename)%(Extension)')" />
     <Exec Command="chmod +x @(ZenZ3LinuxOutputFiles->'$(OutDir)\%(RecursiveDir)%(Filename)%(Extension)')" Condition="$(OS) == 'Unix' and $([MSBuild]::IsOsPlatform('Linux'))" />
   </Target>
@@ -20,7 +20,7 @@
   <!-- 
   Is run once after clean, delete all files that match files collected by the CollectZenZ3LinuxOutputFiles task.
   -->
-  <Target Name="ZenZ3LinuxCleanOutput" AfterTargets="Clean" DependsOnTargets="CollectZenZ3LinuxOutputFiles">
+  <Target Name="ZenZ3LinuxCleanOutput" AfterTargets="Clean">
     <Delete Files="@(ZenZ3LinuxOutputFiles->'$(OutDir)\%(RecursiveDir)%(Filename)%(Extension)')" />
   </Target>
 
