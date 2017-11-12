@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <ItemGroup Condition="$(OS) == 'OSX'">
+      <ZenSecp256k1OSXOutputFiles Include="$(SolutionDir)\..\packages\zen_secp256k1_osx\output\libsecp256k1.dylib" />
+  </ItemGroup>	
+
+  <!-- ============================================================ -->
+  <!-- Build targets                                                -->
+  <!-- ============================================================ -->
+  <!-- 
+  Is run once after build, checks if the project's nuget package's .nuspec depends on Baseclass.Contrib.Nuget.Output and copies everything which is in the
+  output folder to the builds OutDir.
+  -->
+  <Target Name="ZenSecp256k1OSXCopyToOutput" AfterTargets="Compile">
+    <Copy SourceFiles="@(ZenSecp256k1OSXOutputFiles)" DestinationFiles="@(ZenSecp256k1OSXOutputFiles->'$(OutDir)\%(RecursiveDir)%(Filename)%(Extension)')" />
+  </Target>
+
+  <!-- 
+  Is run once after clean, delete all files that match files collected by the CollectZenSecp256k1OSXOutputFiles task.
+  -->
+  <Target Name="ZenSecp256k1OSXCleanOutput" AfterTargets="Clean">
+    <Delete Files="@(ZenSecp256k1OSXOutputFiles->'$(OutDir)\%(RecursiveDir)%(Filename)%(Extension)')" />
+  </Target>
+
+  <!--
+  Is run once per file which has been deleted by the CleanOutput target, if the containing folder is empty it gets deleted.
+  -->
+  <Target Name="CleanEmptyFolder" Inputs="@(ZenSecp256k1OSXOutputFiles)" Outputs="%(Identity).Dummy" AfterTargets="CleanOutput">
+    <ItemGroup>
+      <EmptyCheck Include="$(OutDir)%(ZenSecp256k1OSXOutputFiles.RecursiveDir)**\*.*" />
+    </ItemGroup>
+
+    <RemoveDir Condition="'@(EmptyCheck)' == '' And '%(ZenSecp256k1OSXOutputFiles.RecursiveDir)' != ''" Directories="$(OutDir)%(ZenSecp256k1OSXOutputFiles.RecursiveDir)" />
+  </Target>
+</Project>
