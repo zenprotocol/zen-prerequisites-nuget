@@ -14,7 +14,6 @@
   -->
   <Target Name="ZenSecp256k1LinuxCopyToOutput" AfterTargets="Compile">
     <Copy SourceFiles="@(ZenSecp256k1LinuxOutputFiles)" DestinationFiles="@(ZenSecp256k1LinuxOutputFiles->'$(OutDir)\%(RecursiveDir)%(Filename)%(Extension)')" />
-    <Exec Command="chmod +x @(ZenSecp256k1LinuxOutputFiles->'$(OutDir)\%(RecursiveDir)%(Filename)%(Extension)')" Condition="$(OS) == 'Unix'" />
   </Target>
 
   <!-- 
