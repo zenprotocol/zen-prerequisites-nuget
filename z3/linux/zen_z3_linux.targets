@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
+  <ItemGroup Condition="$(OS) == 'Unix'">
+      <ZenZ3LinuxOutputFiles Include="$(SolutionDir)\..\packages\zen_z3_linux\output\z3" />
+  </ItemGroup>
+
   <!-- ============================================================ -->
   <!-- Build targets                                                -->
   <!-- ============================================================ -->
@@ -8,39 +12,26 @@
   Is run once after build, checks if the project's nuget package's .nuspec depends on Baseclass.Contrib.Nuget.Output and copies everything which is in the
   output folder to the builds OutDir.
   -->
-  <Target Name="CopyToOutput" AfterTargets="Compile" DependsOnTargets="CollectNugetOutputFiles">
-    <Copy SourceFiles="@(NugetOutputFiles)" DestinationFiles="@(NugetOutputFiles->'$(OutDir)\%(RecursiveDir)%(Filename)%(Extension)')" />
-    <Exec Command="chmod +x @(NugetOutputFiles->'$(OutDir)\%(RecursiveDir)%(Filename)%(Extension)')" Condition="$(OS) == 'Unix'" />
+  <Target Name="ZenZ3LinuxCopyToOutput" AfterTargets="Compile" DependsOnTargets="CollectZenZ3LinuxOutputFiles">
+    <Copy SourceFiles="@(ZenZ3LinuxOutputFiles)" DestinationFiles="@(ZenZ3LinuxOutputFiles->'$(OutDir)\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Exec Command="chmod +x @(ZenZ3LinuxOutputFiles->'$(OutDir)\%(RecursiveDir)%(Filename)%(Extension)')" Condition="$(OS) == 'Unix'" />
   </Target>
 
   <!-- 
-  Is run once after clean, delete all files that match files collected by the CollectNugetOutputFiles task.
+  Is run once after clean, delete all files that match files collected by the CollectZenZ3LinuxOutputFiles task.
   -->
-  <Target Name="CleanOutput" AfterTargets="Clean" DependsOnTargets="CollectNugetOutputFiles">
-    <Delete Files="@(NugetOutputFiles->'$(OutDir)\%(RecursiveDir)%(Filename)%(Extension)')" />
+  <Target Name="ZenZ3LinuxCleanOutput" AfterTargets="Clean" DependsOnTargets="CollectZenZ3LinuxOutputFiles">
+    <Delete Files="@(ZenZ3LinuxOutputFiles->'$(OutDir)\%(RecursiveDir)%(Filename)%(Extension)')" />
   </Target>
 
   <!--
-  Is run once per file which has been deleted by the CleanOutput target, if the containing folder is empty it gets deleted.
+  Is run once per file which has been deleted by the ZenZ3LinuxCleanOutput target, if the containing folder is empty it gets deleted.
   -->
-  <Target Name="CleanEmptyFolder" Inputs="@(NugetOutputFiles)" Outputs="%(Identity).Dummy" AfterTargets="CleanOutput">
+  <Target Name="ZenZ3LinuxCleanEmptyFolder" Inputs="@(ZenZ3LinuxOutputFiles)" Outputs="%(Identity).Dummy" AfterTargets="ZenZ3LinuxCleanOutput">
     <ItemGroup>
-      <EmptyCheck Include="$(OutDir)%(NugetOutputFiles.RecursiveDir)**\*.*" />
+      <EmptyCheck Include="$(OutDir)%(ZenZ3LinuxOutputFiles.RecursiveDir)**\*.*" />
     </ItemGroup>
 
-    <RemoveDir Condition="'@(EmptyCheck)' == '' And '%(NugetOutputFiles.RecursiveDir)' != ''" Directories="$(OutDir)%(NugetOutputFiles.RecursiveDir)" />
-  </Target>
-
-  <!-- ============================================================ -->
-  <!-- Common targets                                               -->
-  <!-- ============================================================ -->
-  
-  <!--
-  Is run once to compute the NugetOutputFiles item from the NuGet dependencies of the project
-  -->
-  <Target Name="CollectNugetOutputFiles">
-    <ItemGroup Condition="$(OS) == 'Unix'">
-      <NugetOutputFiles Include="$(SolutionDir)\..\packages\zen_z3_linux\output\z3" />
-    </ItemGroup>
+    <RemoveDir Condition="'@(EmptyCheck)' == '' And '%(ZenZ3LinuxOutputFiles.RecursiveDir)' != ''" Directories="$(OutDir)%(ZenZ3LinuxOutputFiles.RecursiveDir)" />
   </Target>
 </Project>
