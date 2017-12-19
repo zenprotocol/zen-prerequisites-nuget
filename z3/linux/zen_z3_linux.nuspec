@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+	<metadata>
+		<id>zen_z3_linux</id>
+		<version>4.5.1.7-v1f29cebd4df</version>
+		<authors>Microsoft</authors>
+		<description>Z3 Prover for linux</description>
+	</metadata>
+	<files>
+		<file src="zen_z3_linux.targets"  target="build/zen_z3_linux.targets" />
+		<file src="./z3/build/z3"  target="output/z3" />
+	</files>
+</package>
